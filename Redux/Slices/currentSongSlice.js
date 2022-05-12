@@ -10,6 +10,7 @@ export const currentSongSlice = createSlice({
   reducers: {
     setCurrentSong: (state, song) => {
         state.value = song;
+        console.log(state.value);
     }
   },
 })

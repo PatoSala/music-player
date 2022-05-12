@@ -17,7 +17,7 @@ function SearchSong() {
 
     let searchHistory = (song) => {
         let history = recentSearches;
-        history.push(song);
+        history.unshift(song);
         setSearches(history);
     }
 
@@ -36,6 +36,10 @@ function SearchSong() {
     useEffect(() => {
         api.initalize();
     }, []);
+
+    useEffect(() => {
+        searchEngine(searchInput);
+    }, [searchInput])
 
 
     return (
@@ -58,7 +62,7 @@ function SearchSong() {
                 }}
             >
                 <TextInput 
-                    placeholder='Search songs'
+                    placeholder='Songs, Artists and more...'
                     value={searchInput}
                     onFocus={() => !searchBarOpen ? setSearchBarOpen(!searchBarOpen) : null}
                     onChangeText={newValue => setSearchInput(newValue)}
@@ -70,7 +74,7 @@ function SearchSong() {
                         backgroundColor: '#e5e5ea',
                         width: searchBarOpen ? '80%' : '100%',
                         height: 40,
-                        borderRadius: 500,
+                        borderRadius: 12,
                         paddingHorizontal: 20,
                         paddingVertical: 6,
                     }}
@@ -83,7 +87,12 @@ function SearchSong() {
                         }}
                         onPress={() => {setSearchBarOpen(!searchBarOpen)}}
                     >
-                        <Text>Cancel</Text>
+                        <Text
+                            style={{
+                                color: '#0a84ff',
+                                fontWeight: '600'
+                            }}
+                        >Cancel</Text>
                     </TouchableOpacity>
                 ) : (null)}
 
@@ -108,6 +117,7 @@ function SearchSong() {
                 style={{
                     width: '100%',
                     height: '100%',
+                    paddingBottom: searchResults.length > 0 ? 70 : 0
                 }}
             >
                 {
@@ -145,11 +155,14 @@ function SearchSong() {
 
                             {
                                 recentSearches.length > 0 ? (
-                                    recentSearches.reverse().map(searchItem => {
+                                    recentSearches.map(searchItem => {
                                         return (
                                             <TouchableOpacity 
                                                 style={styles.recentSearchItem}
-                                                onPress={() => {searchEngine(searchItem)}}
+                                                onPress={() => {
+                                                    setSearchInput(searchInput)
+                                                    searchEngine(searchItem)
+                                                }}
                                             >
                                                 <Ionicons name="reload" size={16}/>
                                                 <Text style={styles.recentSearchTitle}>{searchItem}</Text>
