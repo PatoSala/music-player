@@ -1,7 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrentSong } from '../../Redux/Slices/currentSongSlice';
+import { addToQueue } from '../../Redux/Slices/queueSlice';
 
-function SongItem({name, artist, thumbnails, videoId, currentSong, setCurrentSong, addToQueue}) {
+function SongItem({name, artist, thumbnails, videoId}) {
+
+    const currentSong = useSelector((state) => state.currentSong.value);
+    const dispatch = useDispatch();
 
     const songData = {
         name: name,
@@ -16,11 +22,30 @@ function SongItem({name, artist, thumbnails, videoId, currentSong, setCurrentSon
                 width: '100%',
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: currentSong != undefined ? (currentSong.videoId === videoId ? '#e5e5ea' : 'white') : null,
+                backgroundColor: currentSong != undefined ? (currentSong.payload.videoId === videoId ? '#e5e5ea' : 'white') : null,
                 paddingVertical: 5,
-                paddingHorizontal: 5
+                paddingHorizontal: 15
             }} 
-            onPress={() => {setCurrentSong(songData)}}>
+            onLongPress={() => {Alert.alert(
+                "",
+                name,
+                [
+                    {
+                        text: "Add to Queue",
+                        onPress: () => {dispatch(addToQueue(songData))}
+                    },
+                    {
+                        text: "Add to Playlist"
+                    },
+                    {
+                        text: "Done",
+                        AlertButtonStyle: 'cencel'
+                    }
+                ]
+            )}}
+            delayLongPress={600}
+            onPress={() => {dispatch(setCurrentSong(songData))}}
+        >
             <Image
                 style={styles.songThumbnails}
                 source={{uri: thumbnails.url, width: 52, height: 52}}
@@ -30,7 +55,7 @@ function SongItem({name, artist, thumbnails, videoId, currentSong, setCurrentSon
                     style={{
                         fontSize: 16,
                         fontWeight: 'bold',
-                        color: currentSong != undefined ? (currentSong.videoId === videoId ? 'pink' : 'black') : null
+                        color: currentSong != undefined ? (currentSong.payload.videoId === videoId ? 'pink' : 'black') : null
                     }}
                 >{
                     name.length > 20 ? (name.slice(0, 30).concat('...')) : (name)

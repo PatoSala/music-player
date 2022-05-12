@@ -17,7 +17,7 @@ function MainNavigator() {
                 options={{
                     tabBarIcon: ({ focused, color, size }) => {
                         return (
-                            <Ionicons name="home" size={32} />
+                            <Ionicons name="musical-notes" size={24} />
                         )
                     }
                 }}
@@ -28,7 +28,7 @@ function MainNavigator() {
                 options={{
                     tabBarIcon: ({ focused, color, size }) => {
                         return (
-                            <Ionicons name="albums" size={32} />
+                            <Ionicons name="albums" size={24} />
                         )
                     }
                 }}
